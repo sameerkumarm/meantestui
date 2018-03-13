@@ -1,0 +1,284 @@
+<!-- 
+LocationMasterId: String,
+         Type: { type: String, trim: true, enum:['Terminal','Yard Location','Customer']},
+         Name: { type: String, trim: true },
+         Address1: { type: String, trim: true },
+         Address2: { type: String, trim: true },
+         City: { type: String, trim: true },
+         CityId: String,
+         State: String,
+         PostalCode: Number,
+         County: String,
+         Country: String,
+         Lat: String,
+         Long: String,
+         CleanseStatusId: String,
+         TimeZone: String,
+         Status:
+-->
+
+<div align="center" class="AddLocationBox" [hidden]="locationService.showAddLocationBox">
+  <h4>Add New Location</h4>
+  <form (ngSubmit)="AddLocation(location);locationForm.reset()" #locationForm="ngForm">
+  <div class="form-group input-group">
+    <label for="locationName">Location Name:</label>
+    <input type="text" [(ngModel)]="location.Name" #Name="ngModel" class="form-control" name="locationName" id="locationName" required />
+    <div [hidden]="Name.valid || Name.pristine"
+         class="alert alert-danger">
+      Location is required
+    </div>
+  </div>
+  <div class="form-group input-group">
+    <label for="locationType">Location Type:</label>
+    <select type="text" [(ngModel)]="location.Type" #Type="ngModel" class="form-control" name="locationType" id="locationType" required >
+    	<option>""</option>
+    	<option>Terminal</option>
+    	<option>Yard Location</option>
+    	<option>Customer</option>
+    </select>
+    <div [hidden]="Type.valid || Type.pristine"
+         class="alert alert-danger">
+      Location Type is required
+    </div>
+  </div>
+  <div class="form-group input-group">
+    <label for="address1">Address 1:</label>
+    <input type="text" [(ngModel)]="location.Address1" #Address1="ngModel" class="form-control" name="address1" id="address1" required />
+    <div [hidden]="Address1.valid || Address1.pristine"
+         class="alert alert-danger">
+      Address1 is required
+    </div>
+  </div>
+  <div class="form-group input-group">
+    <label for="address2">Address 2:</label>
+    <input type="text" [(ngModel)]="location.Address2" #Address2="ngModel" class="form-control" name="address2" id="address2"/>
+  </div>
+  <div class="form-group input-group">
+    <label for="city">City:</label>
+    <input type="text" [(ngModel)]="location.City" #City="ngModel" class="form-control" name="city" id="city" required />
+    <div [hidden]="City.valid || City.pristine"
+         class="alert alert-danger">
+      City is required
+    </div>
+  </div>
+  <div class="form-group input-group">
+    <label for="state">State:</label>
+    <input type="text" [(ngModel)]="location.State" #State="ngModel" class="form-control" name="state" id="state" required />
+    <div [hidden]="State.valid || State.pristine"
+         class="alert alert-danger">
+      State is required
+    </div>
+  </div>
+  <div class="form-group input-group">
+    <label for="postalCode">Zip/Postal Code:</label>
+    <input type="text" [(ngModel)]="location.PostalCode" #PostalCode="ngModel" class="form-control" name="postalCode" id="postalCode" required />
+    <div [hidden]="PostalCode.valid || PostalCode.pristine"
+         class="alert alert-danger">
+      Zip/Postal Code is required
+    </div>
+  </div>
+  <div class="form-group input-group">
+    <label for="county">County:</label>
+    <input type="text" [(ngModel)]="location.County" #County="ngModel" class="form-control" name="county" id="county"/>
+  </div>
+  <div class="form-group input-group">
+    <label for="country">Country:</label>
+    <input type="text" [(ngModel)]="location.Country" #Country="ngModel" class="form-control" name="country" id="country" required />
+    <div [hidden]="Country.valid || Country.pristine"
+         class="alert alert-danger">
+      Country is required
+    </div>
+  </div>
+  <div class="form-group input-group">
+    <label for="latitude">Latitude:</label>
+    <input type="text" [(ngModel)]="location.Lat" #Lat="ngModel" class="form-control" name="latitude" id="latitude"/>
+  </div>
+  <div class="form-group input-group">
+    <label for="longitude">Longitude:</label>
+    <input type="text" [(ngModel)]="location.Long" #Long="ngModel" class="form-control" name="longitude" id="longitude"/>
+  </div>
+  <div class="form-group input-group">
+    <label for="locationText">TimeZone:</label>
+    <input type="text" [(ngModel)]="location.TimeZone" #TimeZone="ngModel" class="form-control" name="timeZone" id="timeZone"/>
+  </div>
+  <div class="form-group input-group">
+    <label for="status">Status:</label>
+    <input type="text" [(ngModel)]="location.Status" #Status="ngModel" class="form-control" name="status" id="status" readonly="readonly" required />
+  </div>
+  <div class="form-group input-group">
+    <label for="cleanseStatusId">Cleanse Status Id:</label>
+    <input type="text" [(ngModel)]="location.CleanseStatusId" #CleanseStatusId="ngModel" class="form-control" name="cleanseStatusId" id="cleanseStatusId" readonly="readonly"/>
+  </div>
+  <button type="submit" [disabled]="!locationForm.form.valid" class="btn btn-success btn-block">Submit</button>
+</form>
+</div>
+
+<div *ngIf="locations.length > 0" class="LocationListBox">
+  <h2 align="center">Your Location's List</h2>
+  <table id="mytable" class="table table-bordred table-striped">
+
+                    <thead>
+                    <th>Location</th>
+                      <th>View</th>
+                       <th>Edit</th>
+                      <th>Delete</th>
+                    </thead>
+     <tbody>
+
+     <tr *ngFor="let location of locations">
+     <td>{{location.locationText}}</td>
+     <td><a  [routerLink]="['/location', location._id]" title="Click to Open {{location.Name}}">View</a></td>
+     <td><p data-placement="top" data-toggle="tooltip" title="Edit"><button class="btn btn-primary btn-xs" (click) = "showEditLocation(location)" data-title="Edit" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></p></td>
+     <td><p data-placement="top" data-toggle="tooltip" title="Delete"><button class="btn btn-danger btn-xs" (click) = "showDeleteLocation(location)" data-title="Delete" data-toggle="modal" data-target="#delete" ><span class="glyphicon glyphicon-trash"></span></button></p></td>
+     </tr>
+
+  <tr>
+  </tbody>
+  </table>
+  <!-- Edit Modal -->
+  <div class="modal fade" id="edit" role="dialog">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Edit Location</h4>
+        </div>
+        <div class="modal-body">
+          <div align="center" class="EditLocationBox">
+            <form (ngSubmit)="EditLocation(locationToEdit)" #editLocationForm="ngForm">
+	          <div class="form-group input-group">
+			    <label for="locationName">Location Name:</label>
+			    <input type="text" [(ngModel)]="locationToEdit.Name" #editName="ngModel" class="form-control" name="locationName" id="locationName" required />
+			    <div [hidden]="editName.valid || editName.pristine"
+			         class="alert alert-danger">
+			      Location is required
+			    </div>
+			  </div>
+			  <div class="form-group input-group">
+			    <label for="locationType">Location Type:</label>
+			    <select type="text" [(ngModel)]="locationToEdit.Type" #editType="ngModel" class="form-control" name="locationType" id="locationType" required >
+			    	<option>""</option>
+			    	<option>Terminal</option>
+			    	<option>Yard Location</option>
+			    	<option>Customer</option>
+			    </select>
+			    <div [hidden]="editType.valid || editType.pristine"
+			         class="alert alert-danger">
+			      Location Type is required
+			    </div>
+			  </div>
+			  <div class="form-group input-group">
+			    <label for="address1">Address 1:</label>
+			    <input type="text" [(ngModel)]="locationToEdit.Address1" #editAddress1="ngModel" class="form-control" name="address1" id="address1" required />
+			    <div [hidden]="editAddress1.valid || editAddress1.pristine"
+			         class="alert alert-danger">
+			      Address1 is required
+			    </div>
+			  </div>
+			  <div class="form-group input-group">
+			    <label for="address2">Address 2:</label>
+			    <input type="text" [(ngModel)]="locationToEdit.Address2" #editAddress2="ngModel" class="form-control" name="address2" id="address2"/>
+			  </div>
+			  <div class="form-group input-group">
+			    <label for="city">City:</label>
+			    <input type="text" [(ngModel)]="locationToEdit.City" #editCity="ngModel" class="form-control" name="city" id="city" required />
+			    <div [hidden]="editCity.valid || editCity.pristine"
+			         class="alert alert-danger">
+			      City is required
+			    </div>
+			  </div>
+			  <div class="form-group input-group">
+			    <label for="state">State:</label>
+			    <input type="text" [(ngModel)]="locationToEdit.State" #editState="ngModel" class="form-control" name="state" id="state" required />
+			    <div [hidden]="editState.valid || editState.pristine"
+			         class="alert alert-danger">
+			      State is required
+			    </div>
+			  </div>
+			  <div class="form-group input-group">
+			    <label for="postalCode">Zip/Postal Code:</label>
+			    <input type="text" [(ngModel)]="locationToEdit.PostalCode" #editPostalCode="ngModel" class="form-control" name="postalCode" id="postalCode" required />
+			    <div [hidden]="editPostalCode.valid || editPostalCode.pristine"
+			         class="alert alert-danger">
+			      Zip/Postal Code is required
+			    </div>
+			  </div>
+			  <div class="form-group input-group">
+			    <label for="county">County:</label>
+			    <input type="text" [(ngModel)]="locationToEdit.County" #editCounty="ngModel" class="form-control" name="county" id="county"/>
+			  </div>
+			  <div class="form-group input-group">
+			    <label for="country">Country:</label>
+			    <input type="text" [(ngModel)]="locationToEdit.Country" #editCountry="ngModel" class="form-control" name="country" id="country" required />
+			    <div [hidden]="editCountry.valid || editCountry.pristine"
+			         class="alert alert-danger">
+			      Country is required
+			    </div>
+			  </div>
+			  <div class="form-group input-group">
+			    <label for="latitude">Latitude:</label>
+			    <input type="text" [(ngModel)]="locationToEdit.Lat" #editLat="ngModel" class="form-control" name="latitude" id="latitude"/>
+			  </div>
+			  <div class="form-group input-group">
+			    <label for="longitude">Longitude:</label>
+			    <input type="text" [(ngModel)]="locationToEdit.Long" #editLong="ngModel" class="form-control" name="longitude" id="longitude"/>
+			  </div>
+			  <div class="form-group input-group">
+			    <label for="locationText">TimeZone:</label>
+			    <input type="text" [(ngModel)]="locationToEdit.TimeZone" #editTimeZone="ngModel" class="form-control" name="timeZone" id="timeZone"/>
+			  </div>
+			  <div class="form-group input-group">
+			    <label for="status">Status:</label>
+			    <input type="text" [(ngModel)]="locationToEdit.Status" #editStatus="ngModel" class="form-control" name="status" id="status" readonly="readonly" required />
+			  </div>
+			  <div class="form-group input-group">
+			    <label for="cleanseStatusId">Cleanse Status Id:</label>
+			    <input type="text" [(ngModel)]="locationToEdit.CleanseStatusId" #editCleanseStatusId="ngModel" class="form-control" name="cleanseStatusId" id="cleanseStatusId" readonly="readonly"/>
+			  </div>
+
+            <button type="submit" [disabled]="!editLocationForm.form.valid || !editLocationForm.form.dirty" class="btn btn-success btn-block">Submit</button>
+          </form>
+          <div style="margin:10px;" *ngIf="apiMessage" align="center" class="alert alert-success" role="alert">
+          <strong>{{apiMessage}}</strong>
+          </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Modal -->
+  <div class="modal fade" id="delete" role="dialog">
+    <div class="modal-dialog modal-md">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Delete Location</h4>
+        </div>
+        <div class="modal-body">
+          <div align="center" class="DeleteLocationBox">
+            <div *ngIf="!apiMessage" align="center" class="alert alert-danger" role="alert">
+              <p>Are you sure want to delete this location?</p>
+            <strong>{{locationToDelete.Name}}</strong>
+            </div>
+          <div style="margin:10px;" *ngIf="apiMessage" align="center" class="alert alert-success" role="alert">
+          <strong>{{locationToDelete.Name}}</strong>  {{apiMessage}}
+          </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" *ngIf="!apiMessage" (click)="DeleteLocation(locationToDelete)">Confirm</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div *ngIf="locations.length <= 0" class="NoLocationsBox">
+<div align="center" class="alert alert-info" role="alert">
+<strong>No Locations Available in Database</strong>
+</div>
+</div>

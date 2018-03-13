@@ -1,0 +1,11 @@
+<div align="center">
+<h4>Location Detail</h4>
+<div *ngIf="location">
+<h3>{{location.State}}</h3>
+<p>Description: {{location.Address}}</p>
+<button (click)="goBack()" type="button" class="btn btn-danger">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        Go Back
+      </button>
+</div>
+</div>
